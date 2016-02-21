@@ -26,8 +26,12 @@ or
 
 ### With docker
 * `docker run -d --name realty -p 8080:8080 alexanderpa/realty`
-#### Linux
+
+Linux
+
 * `http://localhost:8080` - to access the running application
-#### Windows or Mac
+
+Windows or Mac
+
 * `docker-machine ip $(docker-machine active)` - to get ip of active VM
 * `http://<vm_ip>:8080`

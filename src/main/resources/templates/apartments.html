@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Realty</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/4.5.0/css/font-awesome.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/apartments.css}" />
+
+    <script th:src="@{/webjars/jquery/2.2.0/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/apartments.js}"></script>
+</head>
+<body>
+    <div th:replace="fragments/header :: header">&nbsp;</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <form th:action="@{/apartments}" class="form-inline">
+                    <div class="form-group">
+                        <label for="city" class="control-label">Місто</label>
+                        <select name="city" id="city" class="form-control" required="required">
+                            <option value=""></option>
+                            <option th:each="city : ${cities}"
+                                    th:value="${city.id}"
+                                    th:text="${city.name}"
+                                    th:selected="${city == apartmentsPage.city}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="roomsCount">Кількість кімнат</label>
+                        <select name="roomsCount" id="roomsCount" class="form-control">
+                            <option value=""></option>
+                            <option th:each="roomsCount : ${roomsCounts}"
+                                    th:value="${roomsCount.count}"
+                                    th:text="${roomsCount.name}"
+                                    th:selected="${roomsCount == apartmentsPage.roomsCount}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="materialType">Тип матеріалу</label>
+                        <select name="materialType" id="materialType" class="form-control">
+                            <option value=""></option>
+                            <option th:each="materialType : ${materialTypes}"
+                                    th:value="${materialType.id}"
+                                    th:text="${materialType.name}"
+                                    th:selected="${materialType == apartmentsPage.materialType}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="totalAreaRange">Загальна площа</label>
+                        <select name="totalAreaRange" id="totalAreaRange" class="form-control">
+                            <option value=""></option>
+                            <option th:each="totalAreaRange : ${totalAreaRanges}"
+                                    th:value="${totalAreaRange.id}"
+                                    th:text="${totalAreaRange.name}"
+                                    th:selected="${totalAreaRange == apartmentsPage.totalAreaRange}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="livingAreaRange">Жила площа</label>
+                        <select name="livingAreaRange" id="livingAreaRange" class="form-control">
+                            <option value=""></option>
+                            <option th:each="livingAreaRange : ${livingAreaRanges}"
+                                    th:value="${livingAreaRange.id}"
+                                    th:text="${livingAreaRange.name}"
+                                    th:selected="${livingAreaRange == apartmentsPage.livingAreaRange}">
+                            </option>
+                        </select>
+                    </div>
+                    <br/><hr/>
+                    <div class="form-group">
+                        <label for="sortBy">Сортування</label>
+                        <select name="sortBy" id="sortBy" class="form-control">
+                            <option value="totalCost">По ціні</option>
+                            <option value="costPerSquare">По ціні за кв. метр</option>
+                        </select>
+                        <label for="sortType" class="sr-only"></label>
+                        <select name="sortType" id="sortType" class="form-control">
+                            <option th:each="sortType : ${sortTypes}"
+                                    th:value="${sortType.id}"
+                                    th:text="${sortType.name}"
+                                    th:selected="${sortType == apartmentsPage.apartmentsSort.sortType}">
+                            </option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Пошук</button>
+                </form>
+            </div>
+        </div>
+        <hr/>
+        <h3>Статистика</h3>
+        <div class="row">
+            <div class="col-sm-6" th:with="totalCostStatistic=${apartmentsPage.apartmentStatistics.totalCostStatistic}">
+                <h4>Загальна ціна</h4>
+                <dl class="dl-horizontal" th:if="${totalCostStatistic != null}">
+                    <dt>найменша ціна</dt><dd th:text="${#numbers.formatDecimal(totalCostStatistic.min,0,'DEFAULT', 0, 'DEFAULT')}"></dd>
+                    <dt>найбільша ціна</dt><dd th:text="${#numbers.formatDecimal(totalCostStatistic.max,0,'DEFAULT', 0, 'DEFAULT')}"></dd>
+                    <dt>середня ціна</dt><dd th:text="${#numbers.formatDecimal(totalCostStatistic.middle,0,'DEFAULT', 0, 'DEFAULT')}"></dd>
+                    <dt>ціна 25-го процентилю</dt><dd th:text="${#numbers.formatDecimal(totalCostStatistic.bottomQuartile,0,'DEFAULT', 0, 'DEFAULT')}"></dd>
+                    <dt>ціна 75-го процентилю</dt><dd th:text="${#numbers.formatDecimal(totalCostStatistic.topQuartile,0,'DEFAULT', 0, 'DEFAULT')}"></dd>
+                </dl>
+            </div>
+            <div class="col-sm-6" th:with="costPerSquareStatistic=${apartmentsPage.apartmentStatistics.costPerSquareStatistic}">
+                <h4>Ціна за квадратний метр</h4>
+                <dl class="dl-horizontal" th:if="${costPerSquareStatistic != null}">
+                    <dt>найменша ціна</dt><dd th:text="${#numbers.formatDecimal(costPerSquareStatistic.min,0,'DEFAULT', 0, 'DEFAULT')}"></dd>
+                    <dt>найбільша ціна</dt><dd th:text="${#numbers.formatDecimal(costPerSquareStatistic.max,0,'DEFAULT', 0, 'DEFAULT')}"></dd>
+                    <dt>середня ціна</dt><dd th:text="${#numbers.formatDecimal(costPerSquareStatistic.middle,0,'DEFAULT', 0, 'DEFAULT')}"></dd>
+                    <dt>ціна 25-го процентилю</dt><dd th:text="${#numbers.formatDecimal(costPerSquareStatistic.bottomQuartile,0,'DEFAULT', 0, 'DEFAULT')}"></dd>
+                    <dt>ціна 75-го процентилю</dt><dd th:text="${#numbers.formatDecimal(costPerSquareStatistic.topQuartile,0,'DEFAULT', 0, 'DEFAULT')}"></dd>
+                </dl>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Кількість кімнат</th>
+                            <th>Поверх</th>
+                            <th>Площа</th>
+                            <th>Ціна</th>
+                            <th>Ціна за кв. м.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="apartment : ${apartmentsPage.apartments}"
+                            th:attr="data-content=${apartment.advert.content}"
+                            data-toggle="popover">
+                            <td th:text="${apartment.rooms}"></td>
+                            <td th:text="${apartment.storey}"></td>
+                            <td th:text="${apartment.apartmentArea.total}"></td>
+                            <td>
+                                <span th:if="${apartment.apartmentCost.total != null}">
+                                    <span th:text="${#numbers.formatDecimal(apartment.apartmentCost.total,0,'DEFAULT',0,'DEFAULT')}"></span>
+                                </span>
+                            </td>
+                            <td>
+                                <span th:if="${apartment.apartmentCost.perSquare != null}">
+                                    <span th:text="${#numbers.formatDecimal(apartment.apartmentCost.perSquare,0,'DEFAULT',0,'DEFAULT')}"></span>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

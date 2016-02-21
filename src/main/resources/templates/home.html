@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Realty</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link rel="stylesheet" href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" />
+</head>
+<body>
+    <div th:replace="fragments/header :: header">&nbsp;</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <ul class="list-unstyled">
+                    <li><a th:href="@{/index}">Сторінка Індексації</a></li>
+                    <li><a th:href="@{/apartments}">Сторінка Оголошень</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
